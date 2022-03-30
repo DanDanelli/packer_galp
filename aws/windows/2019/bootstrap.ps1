@@ -1,4 +1,3 @@
-<powershell>
 # Set administrator password
 net user Administrator PackerDemoSR3G4lp
 wmic useraccount where "name='Administrator'" set PasswordExpires=FALSE
@@ -38,10 +37,3 @@ Stop-Service -Name WinRM
 Set-Service -Name WinRM -StartupType Automatic
 netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new action=allow localip=any remoteip=any
 Start-Service -Name WinRM
-
-#Aws Instance initialize
-C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\InitializeInstance.ps1 -Schedule
-
-#Sysprep
-C:\\ProgramData\\Amazon\\EC2-Windows\\Launch\\Scripts\\SysprepInstance.ps1 -NoShutdown
-</powershell>
