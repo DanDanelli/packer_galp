@@ -41,7 +41,6 @@ source "amazon-ebs" "ubuntu" {
     region              = "${local.region}"
     vpc_id              = "${local.vpc_id}"
     subnet_id           = "${local.subnet_id}"
-    security_group_ids  = ["sg-008991abea339f2dc"]
     associate_public_ip_address = true
   source_ami_filter {
     filters = {
