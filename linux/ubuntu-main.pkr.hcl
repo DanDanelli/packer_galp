@@ -20,6 +20,7 @@ source "azure-arm" "ubuntu" {
     dept = "Engineering"
     task = "Image deployment"
   }
+  //CORRIGIR
   client_id                         = "36cc18ed-87b5-47b7-b5ae-cd0791934340"
   client_secret                     = "pLE7Q~QHLfKwGjAuv3lYSpTr9H5YAwqcVCgmH"
   image_offer                       = "UbuntuServer"
@@ -55,15 +56,15 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-    name      = "aws-packer-ubuntu"
+    name      = "builder"
     sources   = ["source.amazon-ebs.ubuntu","source.azure-arm.ubuntu"]
 
-  provisioner "shell" {
-    script = "apache.sh"
+  provisioner "ansible" {
+    playbook_file = "./ansible/main_v2.yml"
   }
 
   provisioner "shell" {
-    script = "reset.sh"
+    script = "./resources/reset.sh"
   }
 
   post-processor "manifest" {

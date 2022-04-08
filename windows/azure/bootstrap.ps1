@@ -1,10 +1,6 @@
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine -Force -ErrorAction Ignore
 $ErrorActionPreference = "stop"
 
-# Set administrator password
-net user packer SuperS3cr3t!!!!
-wmic useraccount where "name='packer'" set PasswordExpires=FALSE
-
 # turn off PowerShell execution policy restrictions
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
 

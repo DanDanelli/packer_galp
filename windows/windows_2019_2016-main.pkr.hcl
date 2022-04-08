@@ -20,8 +20,9 @@ source "azure-arm" "windows" {
     dept = "Engineering"
     task = "Image deployment"
   }
-  client_id                         = "36cc18ed-87b5-47b7-b5ae-cd0791934340"
-  client_secret                     = "pLE7Q~QHLfKwGjAuv3lYSpTr9H5YAwqcVCgmH"
+  //Corrigir
+  // client_id                         = "36cc18ed-87b5-47b7-b5ae-cd0791934340"
+  // client_secret                     = "pLE7Q~QHLfKwGjAuv3lYSpTr9H5YAwqcVCgmH"
   communicator                      = "winrm"
   image_offer                       = "WindowsServer"
   image_publisher                   = "MicrosoftWindowsServer"
@@ -34,7 +35,6 @@ source "azure-arm" "windows" {
   tenant_id                         = "c97621e9-4bac-4ed5-ab14-b38e8e16ce85"
   vm_size                           = "Standard_D2_v2"
   winrm_insecure                    = true
-  // winrm_timeout                     = "30m"
   winrm_use_ssl                     = true
   winrm_username                    = "packer"
   user_data_file                    = "./azure/bootstrap.ps1"
@@ -66,29 +66,29 @@ source "amazon-ebs" "windows" {
 }
 
 build {
-  name    = "azure-packer-windows"
-  sources = ["source.azure-arm.windows"]
+  name    = "builder"
+  sources = ["source.azure-arm.windows", "source.amazon-ebs.windows"]
+
+  provisioner "powershell" {
+    script = "./ansible/remote_config.ps1"  
+  }
+  
+  provisioner "ansible" {
+    playbook_file = "./ansible/playbook.yml"
+    extra_arguments = ["--extra-vars", "winrm_password=${build.Password}"]
+
+  }
 
   provisioner "windows-restart" {
   }
 
   provisioner "powershell" {
+    only = ["azure-arm.windows"]
     script = "./azure/sysprep.ps1"  
   }
 
-  post-processor "manifest" {
-    output = "manifest.json"
-  }
-}
-
-build {
-  name    = "amazon-packer-windows"
-  sources = ["source.amazon-ebs.windows"]
-
-  provisioner "windows-restart" {
-  }
-  
   provisioner "powershell" {
+    only = ["amazon-ebs.windows"]
     script = "./aws/reset.ps1"
   }
 

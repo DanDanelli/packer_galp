@@ -3,21 +3,21 @@
     {
       "name": "windows",
       "builder_type": "azure-arm",
-      "build_time": 1649088088,
+      "build_time": 1649153265,
       "files": null,
-      "artifact_id": "/subscriptions/aa3930a3-3762-49e2-b88e-38bc0581dfb3/resourceGroups/myPackerGroup/providers/Microsoft.Compute/images/packer-windows-demo-20220404154952",
-      "packer_run_uuid": "3035fd22-b93a-43fb-796f-bd5c5a5eb700",
+      "artifact_id": "/subscriptions/aa3930a3-3762-49e2-b88e-38bc0581dfb3/resourceGroups/myPackerGroup/providers/Microsoft.Compute/images/packer-windows-demo-20220405095722",
+      "packer_run_uuid": "deddf598-d0db-2b8f-ca29-8ef7468053ea",
       "custom_data": null
     },
     {
       "name": "windows",
       "builder_type": "amazon-ebs",
-      "build_time": 1649088279,
+      "build_time": 1649153390,
       "files": null,
-      "artifact_id": "eu-west-1:ami-05680b4c8f94de35e",
-      "packer_run_uuid": "3035fd22-b93a-43fb-796f-bd5c5a5eb700",
+      "artifact_id": "eu-west-1:ami-01ab646f0741d95ac",
+      "packer_run_uuid": "deddf598-d0db-2b8f-ca29-8ef7468053ea",
       "custom_data": null
     }
   ],
-  "last_run_uuid": "3035fd22-b93a-43fb-796f-bd5c5a5eb700"
+  "last_run_uuid": "deddf598-d0db-2b8f-ca29-8ef7468053ea"
 }

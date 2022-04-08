@@ -1,8 +1,4 @@
 <powershell>
-# Set administrator password
-net user packer SuperS3cr3t!!!!
-wmic useraccount where "name='packer'" set PasswordExpires=FALSE
-
 write-output "Running User Data Script"
 write-host "(host) Running User Data Script"
 
