@@ -15,14 +15,59 @@ locals {
     instance_type = "t2.micro"
 }
 
+variable "arm_client_id" {
+  type    = string
+  default = "${env("arm_client_id")}"
+  validation {
+    condition     = length(var.arm_client_id) > 0
+    error_message = <<EOF
+The arm_client_id environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_client_secret" {
+  type    = string
+  default = "${env("arm_client_secret")}"
+  validation {
+    condition     = length(var.arm_client_secret) > 0
+    error_message = <<EOF
+The arm_client_secret environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_subscription_id" {
+  type    = string
+  default = "${env("arm_subscription_id")}"
+  validation {
+    condition     = length(var.arm_subscription_id) > 0
+    error_message = <<EOF
+The arm_subscription_id environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_tenant_id" {
+  type    = string
+  default = "${env("arm_tenant_id")}"
+  validation {
+    condition     = length(var.arm_tenant_id) > 0
+    error_message = <<EOF
+The arm_tenant_id environment variable must be set.
+EOF
+  }
+}
+
 source "azure-arm" "ubuntu" {
   azure_tags = {
     dept = "Engineering"
     task = "Image deployment"
   }
-  //CORRIGIR
-  client_id                         = "36cc18ed-87b5-47b7-b5ae-cd0791934340"
-  client_secret                     = "pLE7Q~QHLfKwGjAuv3lYSpTr9H5YAwqcVCgmH"
+  client_id                         = "${var.arm_client_id}"
+  client_secret                     = "${var.arm_client_secret}"
+  subscription_id                   = "${var.arm_subscription_id}"
+  tenant_id                         = "${var.arm_tenant_id}"
   image_offer                       = "UbuntuServer"
   image_publisher                   = "Canonical"
   image_sku                         = "18.04-LTS"
@@ -31,8 +76,6 @@ source "azure-arm" "ubuntu" {
   managed_image_resource_group_name = "myPackerGroup"
   os_type                           = "Linux"
   ssh_username                      = "ubuntu"
-  subscription_id                   = "aa3930a3-3762-49e2-b88e-38bc0581dfb3"
-  tenant_id                         = "c97621e9-4bac-4ed5-ab14-b38e8e16ce85"
   vm_size                           = "Standard_DS1_v2"
 }
 

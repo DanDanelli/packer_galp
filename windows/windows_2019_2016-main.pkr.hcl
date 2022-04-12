@@ -15,14 +15,60 @@ locals {
     instance_type = "t2.micro"
 }
 
+variable "arm_client_id" {
+  type    = string
+  default = "${env("arm_client_id")}"
+  validation {
+    condition     = length(var.arm_client_id) > 0
+    error_message = <<EOF
+The arm_client_id environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_client_secret" {
+  type    = string
+  default = "${env("arm_client_secret")}"
+  validation {
+    condition     = length(var.arm_client_secret) > 0
+    error_message = <<EOF
+The arm_client_secret environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_subscription_id" {
+  type    = string
+  default = "${env("arm_subscription_id")}"
+  validation {
+    condition     = length(var.arm_subscription_id) > 0
+    error_message = <<EOF
+The arm_subscription_id environment variable must be set.
+EOF
+  }
+}
+
+variable "arm_tenant_id" {
+  type    = string
+  default = "${env("arm_tenant_id")}"
+  validation {
+    condition     = length(var.arm_tenant_id) > 0
+    error_message = <<EOF
+The arm_tenant_id environment variable must be set.
+EOF
+  }
+}
+
 source "azure-arm" "windows" {
   azure_tags = {
     dept = "Engineering"
     task = "Image deployment"
   }
-  //Corrigir
-  // client_id                         = "36cc18ed-87b5-47b7-b5ae-cd0791934340"
-  // client_secret                     = "pLE7Q~QHLfKwGjAuv3lYSpTr9H5YAwqcVCgmH"
+
+  client_id                         = "${var.arm_client_id}"
+  client_secret                     = "${var.arm_client_secret}"
+  subscription_id                   = "${var.arm_subscription_id}"
+  tenant_id                         = "${var.arm_tenant_id}"
   communicator                      = "winrm"
   image_offer                       = "WindowsServer"
   image_publisher                   = "MicrosoftWindowsServer"
@@ -31,8 +77,6 @@ source "azure-arm" "windows" {
   managed_image_name                = "packer-windows-demo-${local.timestamp}"
   managed_image_resource_group_name = "myPackerGroup"
   os_type                           = "Windows"
-  subscription_id                   = "aa3930a3-3762-49e2-b88e-38bc0581dfb3"
-  tenant_id                         = "c97621e9-4bac-4ed5-ab14-b38e8e16ce85"
   vm_size                           = "Standard_D2_v2"
   winrm_insecure                    = true
   winrm_use_ssl                     = true
@@ -69,9 +113,9 @@ build {
   name    = "builder"
   sources = ["source.azure-arm.windows", "source.amazon-ebs.windows"]
 
-  provisioner "powershell" {
-    script = "./ansible/remote_config.ps1"  
-  }
+  // provisioner "powershell" {
+  //   script = "./ansible/remote_config.ps1"  
+  // }
   
   provisioner "ansible" {
     playbook_file = "./ansible/playbook.yml"
