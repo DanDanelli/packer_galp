@@ -20,5 +20,8 @@ winrm set winrm/config/client '@{TrustedHosts="*"}'
 # open port 5986 in the internal Windows firewall to allow WinRM communication
 netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
 
+# open port 5986 in the internal Windows firewall to allow WinRM communication
+netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
+
 net stop winrm
 net start WinRM

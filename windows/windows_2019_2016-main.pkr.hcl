@@ -8,11 +8,12 @@ packer {
 }
 
 locals {
-    timestamp     = regex_replace(timestamp(), "[- TZ:]", "") 
-    region        = "eu-west-1"
-    vpc_id        = "vpc-0388c9895160ff515"
-    subnet_id     = "subnet-020b942e8598e2622"
-    instance_type = "t2.micro"
+  timestamp         = regex_replace(timestamp(), "[- TZ:]", "") 
+  region            = "eu-west-1"
+  vpc_id            = "vpc-0388c9895160ff515"
+  subnet_id         = "subnet-020b942e8598e2622"
+  security_group_id = "sg-0422205fb460447bc"
+  instance_type     = "t2.micro"
 }
 
 variable "arm_client_id" {
@@ -80,14 +81,14 @@ source "azure-arm" "windows" {
   vm_size                           = "Standard_D2_v2"
   winrm_insecure                    = true
   winrm_use_ssl                     = true
-  winrm_username                    = "packer"
+  winrm_username                    = "Packer_User"
   user_data_file                    = "./azure/bootstrap.ps1"
 }
 
 source "amazon-ebs" "windows" {
   ami_name          = "packer-windows-demo-${local.timestamp}"
   communicator      = "winrm"
-  winrm_username    = "Administrator"
+  winrm_username    = "Packer_User"
   winrm_use_ssl     = true
   winrm_insecure    = true
   force_deregister = true
@@ -96,6 +97,7 @@ source "amazon-ebs" "windows" {
   region            = "${local.region}"
   vpc_id            = "${local.vpc_id}"
   subnet_id         = "${local.subnet_id}"
+  security_group_id = "${local.security_group_id}"
   associate_public_ip_address = true
   source_ami_filter {
     filters = {
@@ -113,13 +115,18 @@ build {
   name    = "builder"
   sources = ["source.azure-arm.windows", "source.amazon-ebs.windows"]
 
-  // provisioner "powershell" {
-  //   script = "./ansible/remote_config.ps1"  
-  // }
+  provisioner "powershell" {
+    script = "./ansible/remote_config.ps1"  
+  }
   
+  provisioner "powershell"{
+    inline = ["winrm enumerate winrm/config/Listener"]
+  }
+
   provisioner "ansible" {
     playbook_file = "./ansible/playbook.yml"
     extra_arguments = ["--extra-vars", "winrm_password=${build.Password}"]
+    use_proxy = false
 
   }
 

@@ -3,24 +3,18 @@
     hosts: default
 
     vars:
-      - ansible_user: Administrator
+      - ansible_user: Packer_User
       - ansible_password: "{{ winrm_password }}"
       - ansible_connection: winrm
       - ansible_winrm_transport: basic
       - ansible_ssh_port: 5985
       - ansible_winrm_server_cert_validation: ignore
-      - ansible_winrm_scheme: http
-      # - ansible_shell_type: powershell
-      # - ansible_shell_executable: None
     tasks:
-      - name: test connection
-        ansible.windows.win_ping:
-      # - name: 'Run Updates on Directory Servers then wait 15 mins'
-      #   win_updates:
-      #     category_names:
-      #       - CriticalUpdates
-      #       - SecurityUpdates
-      #     blacklist:
-      #       - Microsoft Silverlight
-      #     reboot: yes
-      #     reboot_timeout: 900
+      - name: 'Run Updates on Directory Servers then wait 15 mins'
+        win_updates:
+          category_names:
+            - CriticalUpdates
+            - SecurityUpdates
+          log_path: win_updates.log
+          reboot: yes
+          reboot_timeout: 900
