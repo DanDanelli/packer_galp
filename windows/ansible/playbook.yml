@@ -3,7 +3,7 @@
     hosts: default
 
     vars:
-      - ansible_user: Packer_User
+      - ansible_user: "{{ winrm_user }}"
       - ansible_password: "{{ winrm_password }}"
       - ansible_connection: winrm
       - ansible_winrm_transport: basic

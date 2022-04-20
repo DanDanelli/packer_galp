@@ -88,7 +88,8 @@ source "azure-arm" "windows" {
 source "amazon-ebs" "windows" {
   ami_name          = "packer-windows-demo-${local.timestamp}"
   communicator      = "winrm"
-  winrm_username    = "Packer_User"
+  //winrm_username    = "Packer_User"
+  winrm_username    = "Administrator"
   winrm_use_ssl     = true
   winrm_insecure    = true
   force_deregister = true
@@ -125,7 +126,7 @@ build {
 
   provisioner "ansible" {
     playbook_file = "./ansible/playbook.yml"
-    extra_arguments = ["--extra-vars", "winrm_password=${build.Password}"]
+    extra_arguments = ["--extra-vars", "winrm_password=${build.Password} winrm_user=${build.User}"]
     use_proxy = false
 
   }
