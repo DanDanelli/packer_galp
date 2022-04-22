@@ -80,7 +80,7 @@ source "azure-arm" "ubuntu" {
 }
 
 source "amazon-ebs" "ubuntu" {
-    ami_name            = "aws-linux-demo-${local.timestamp}"
+    ami_name            = "aws-ubuntu-${local.timestamp}"
     instance_type       = "${local.instance_type}"
     region              = "${local.region}"
     vpc_id              = "${local.vpc_id}"
@@ -98,12 +98,31 @@ source "amazon-ebs" "ubuntu" {
   ssh_username   = "ubuntu"
 }
 
+source "amazon-ebs" "redhat" {
+    ami_name                    = "aws-rhel8-${local.timestamp}"
+    instance_type               = "${local.instance_type}"
+    region                      = "${local.region}"
+    vpc_id                      = "${local.vpc_id}"
+    subnet_id                   = "${local.subnet_id}"
+    associate_public_ip_address = true
+  source_ami_filter {
+    filters = {
+      name                      = "*RHEL-8*-x86_64-*"
+      root-device-type          = "ebs"
+      virtualization-type       = "hvm"
+    }
+    most_recent                 = true
+    owners                      = ["309956199498"]
+  }
+  ssh_username                  = "ec2-user"
+}
+
 build {
     name      = "builder"
-    sources   = ["source.amazon-ebs.ubuntu","source.azure-arm.ubuntu"]
+    sources   = ["source.amazon-ebs.ubuntu","source.azure-arm.ubuntu", "amazon-ebs.redhat"]
 
   provisioner "ansible" {
-    playbook_file = "./ansible/main_v2.yml"
+    playbook_file = "./ansible/playbook.yml"
   }
 
   provisioner "shell" {
