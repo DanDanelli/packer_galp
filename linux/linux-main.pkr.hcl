@@ -79,6 +79,26 @@ source "azure-arm" "ubuntu" {
   vm_size                           = "Standard_DS1_v2"
 }
 
+source "azure-arm" "redhat" {
+  azure_tags = {
+    dept = "Engineering"
+    task = "Image deployment"
+  }
+  client_id                         = "${var.arm_client_id}"
+  client_secret                     = "${var.arm_client_secret}"
+  subscription_id                   = "${var.arm_subscription_id}"
+  tenant_id                         = "${var.arm_tenant_id}"
+  image_offer                       = "RHEL"
+  image_publisher                   = "RedHat"
+  image_sku                         = "8.2-LVM"
+  location                          = "East US"
+  managed_image_name                = "azure-rhel-demo-${local.timestamp}"
+  managed_image_resource_group_name = "myPackerGroup"
+  os_type                           = "Linux"
+  ssh_username                      = "rhel"
+  vm_size                           = "Standard_DS1_v2"
+}
+
 source "amazon-ebs" "ubuntu" {
     ami_name            = "aws-ubuntu-${local.timestamp}"
     instance_type       = "${local.instance_type}"
