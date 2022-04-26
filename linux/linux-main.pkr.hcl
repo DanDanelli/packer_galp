@@ -139,7 +139,7 @@ source "amazon-ebs" "redhat" {
 
 build {
     name      = "builder"
-    sources   = ["source.amazon-ebs.ubuntu","source.azure-arm.ubuntu", "amazon-ebs.redhat"]
+    sources   = ["source.azure-arm.ubuntu", "source.azure-arm.redhat", "source.amazon-ebs.ubuntu", "amazon-ebs.redhat"]
 
   provisioner "ansible" {
     playbook_file = "./ansible/playbook.yml"
